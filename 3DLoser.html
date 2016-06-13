@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+        <title>3D魯蛇</title>
+		
+        <!-- Babylon.js -->
+        <script src="http://www.babylonjs.com/hand.minified-1.2.js"></script>
+        <script src="http://www.babylonjs.com/cannon.js"></script>
+        <script src="http://www.babylonjs.com/oimo.js"></script>
+        <script src="http://www.babylonjs.com/babylon.js"></script>
+		<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+		<script src="snake.js"></script>
+		<script src="egg.js"></script>
+        <style>
+			@font-face {
+				font-family: myFont;
+				src: url(fonts/Softplain.ttf);
+			}
+            html, body {
+                overflow: hidden;
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+
+            #renderCanvas {
+                width: 100%;
+                height: 100%;
+                touch-action: none;
+            }
+			
+			.startPage {
+				background-image: url('image/3DLoser.png');
+				background-repeat:no-repeat;
+				width: 716px;
+				height: 100%;
+				position: absolute;
+				left: 50%;
+				top: 15%;
+				margin-left: -358px;
+				margin-top: -139.5px;				
+			}			
+			.loading {
+				position: absolute;
+				left: 50%;
+				top: 94%;
+				margin-left: -150px;
+				margin-top: -39.5px;				
+			}
+			.startButton {
+				position: absolute;
+				left: 50%;
+				top: 94%;
+				margin-left: -94.5px;
+				margin-top: -30.5px;				
+			}
+			.addButton{
+				position: absolute;
+				left: 90%;
+				top: 10%;
+			}
+			.minusButton{
+				position: absolute;
+				left: 90%;
+				top: 20%;
+			}
+			.endPage {
+				display: none;
+				background-image: url('image/lose.png');
+				background-repeat:no-repeat;
+				width: 834px;
+				height: 100%;
+				position: absolute;
+				left: 50%;
+				top: 15%;
+				margin-left: -417px;
+				margin-top: -102.5px;				
+			}
+			.score{
+				background-image: url('image/board.png');
+				background-repeat:no-repeat;
+				font-family: myFont, 微軟正黑體;
+				font-size: 240px;
+				color: black;	
+				align: center;				
+				text-align: center;
+				line-height: 350px;
+				letter-spacing: 30px;
+				position: absolute;
+				width: 100%;
+				height: 300px;
+				width: 550px;
+				left: 50%;
+				top: 30%;
+				margin-left: -275px;				
+			}
+			.restartButton {
+				position: absolute;
+				left: 50%;
+				top: 90%;
+				margin-left: -142px;
+				margin-top: -35.5px;				
+			}
+        </style>
+    </head>
+<body>
+    <canvas id="renderCanvas"></canvas>
+    <script>
+        var canvas = document.getElementById("renderCanvas");
+        var engine = new BABYLON.Engine(canvas, true);
+		var isGameStart = false;		
+		var musicPath = "sounds/BGM" + (Math.floor(Math.random() * 4) + 1) + ".wav";
+		var musicVolume = 0.5;
+		var snakeSpeed = 10;
+		var loser;
+		var eggSet;
+		var time = 0;
+		var speedCount = 1;
+		var isCanChangeWay = true;
+
+        var createScene = function () {
+        	var scene = new BABYLON.Scene(engine);
+        
+			var light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(-30, 25, 5), scene);
+        	var camera = new BABYLON.ArcRotateCamera("Camera",3 * Math.PI / 2, Math.PI / 2.5, 40, BABYLON.Vector3.Zero(), scene);	
+			
+			if(isGameStart){
+				camera.attachControl(canvas, true, false);			
+			}
+			
+		//	console.log(musicPath);
+        	var music = new BABYLON.Sound("MapleStory", musicPath, scene, function () {
+				if(!isGameStart){
+					console.log("Sound is now ready to be played.");
+					// Play immediatly		
+					music.setVolume(musicVolume);					
+					music.play();
+					$(".loading").remove();
+					$(".addButton").click(function(){				
+						if(musicVolume < 1){
+							musicVolume += 0.1;						
+							music.setVolume(musicVolume);	
+						}
+					});
+					$(".minusButton").click(function(){
+						if(musicVolume > 0){
+							musicVolume -= 0.1;					
+							music.setVolume(musicVolume);					
+						}
+						if(musicVolume < 0){
+							music.setVolume(0);
+						}
+					});
+					document.getElementById("startButton").type = "image";
+				}						
+			});			
+			music.loop = true;
+			window.addEventListener("keydown", function (evt) {
+				// Press + key to Increase the Volume
+				if (evt.keyCode === 107) { 
+					if(musicVolume < 1){
+						musicVolume += 0.1;						
+						music.setVolume(musicVolume);
+						eat.setVolume(musicVolume);						
+					}
+				}
+			});
+			window.addEventListener("keydown", function (evt) {
+				// Press - key to Decrease the Volume
+				if (evt.keyCode === 109) { 
+					if(musicVolume > 0){
+						musicVolume -= 0.1;					
+						music.setVolume(musicVolume);		
+						eat.setVolume(musicVolume);						
+					}
+					if(musicVolume < 0){
+						music.setVolume(0);
+						eat.setVolume(0);
+					}
+				}
+			});
+			
+			window.addEventListener("keydown", function (evt) {
+				// Press W key to go up
+				if (evt.keyCode === 87 && isCanChangeWay) { 
+					if(isGameStart){
+						loser.action('w');
+						isCanChangeWay = false;
+					}
+				}
+			});
+			window.addEventListener("keydown", function (evt) {
+				// Press A key to go left
+				if (evt.keyCode === 65 && isCanChangeWay) { 
+					if(isGameStart){
+						loser.action('a');
+						isCanChangeWay = false;
+					}
+				}
+			});
+			window.addEventListener("keydown", function (evt) {
+				// Press S key to go down
+				if (evt.keyCode === 83 && isCanChangeWay) { 
+					if(isGameStart){
+						loser.action('s');
+						isCanChangeWay = false;
+					}
+				}
+			});
+			window.addEventListener("keydown", function (evt) {
+				// Press D key to go right
+				if (evt.keyCode === 68 && isCanChangeWay) { 
+					if(isGameStart){
+						loser.action('d');
+						isCanChangeWay = false;
+					}
+				}
+			});
+		
+			
+			
+			
+			// Skybox
+			var skybox = BABYLON.Mesh.CreateBox("skyBox", 1000.0, scene);
+			var skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
+			skyboxMaterial.backFaceCulling = false;
+			skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("textures/skybox", scene);
+			skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+			skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
+			skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+			skyboxMaterial.disableLighting = true;
+			skybox.material = skyboxMaterial;
+			
+			
+        	//Creation of a box
+        	//(name of the box, size, scene)
+        	var box = BABYLON.Mesh.CreateBox("box",15,scene);
+			//Define a material
+			var f = new BABYLON.StandardMaterial("material0",scene);
+			f.diffuseTexture = new BABYLON.Texture("textures/grassDown.png",scene);
+			f.emissiveTexture = new BABYLON.Texture("textures/grassDown.png",scene);
+			var ba = new BABYLON.StandardMaterial("material1",scene);
+			ba.diffuseTexture = new BABYLON.Texture("textures/grassUp.png",scene);
+			ba.emissiveTexture = new BABYLON.Texture("textures/grassUp.png",scene);
+			var l = new BABYLON.StandardMaterial("material2",scene);
+			l.diffuseTexture = new BABYLON.Texture("textures/grassRight.png",scene);
+			l.emissiveTexture = new BABYLON.Texture("textures/grassRight.png",scene);
+			var r = new BABYLON.StandardMaterial("material3",scene);
+			r.diffuseTexture = new BABYLON.Texture("textures/grassRight.png",scene);
+			r.emissiveTexture = new BABYLON.Texture("textures/grassRight.png",scene);
+			var t = new BABYLON.StandardMaterial("material4",scene);
+			t.diffuseTexture = new BABYLON.Texture("textures/grassRight.png",scene);
+			t.emissiveTexture = new BABYLON.Texture("textures/grassRight.png",scene);
+			var bo = new BABYLON.StandardMaterial("material5",scene);
+			bo.diffuseTexture = new BABYLON.Texture("textures/grassLeft.png",scene);
+			bo.emissiveTexture = new BABYLON.Texture("textures/grassLeft.png",scene);
+			//put into one
+			var multi=new BABYLON.MultiMaterial("nuggetman",scene);
+			multi.subMaterials.push(f);
+			multi.subMaterials.push(ba);
+			multi.subMaterials.push(l);
+			multi.subMaterials.push(r);
+			multi.subMaterials.push(t);
+			multi.subMaterials.push(bo);
+			//apply material
+			box.subMeshes=[];
+			var verticesCount = box.getTotalVertices();
+			box.subMeshes.push(new BABYLON.SubMesh(0, 0, verticesCount, 0, 6, box));
+			box.subMeshes.push(new BABYLON.SubMesh(1, 1, verticesCount, 6, 6, box));
+			box.subMeshes.push(new BABYLON.SubMesh(2, 2, verticesCount, 12, 6, box));
+			box.subMeshes.push(new BABYLON.SubMesh(3, 3, verticesCount, 18, 6, box));
+			box.subMeshes.push(new BABYLON.SubMesh(4, 4, verticesCount, 24, 6, box));
+			box.subMeshes.push(new BABYLON.SubMesh(5, 5, verticesCount, 30, 6, box));
+			
+			multi.ambientColor = new BABYLON.Color3(0.00, 0.00, 0.00);
+			multi.specularColor = new BABYLON.Color3(0.00, 0.00, 0.00);
+			box.material = multi;
+
+        	// Moving elements
+        	box.position = new BABYLON.Vector3(0, 0, 0);   // Using a vector
+			
+			//////////object//////////
+			if(isGameStart){	
+				loser = new Snake(scene);
+				eggSet = new Eggs(loser,scene);
+			}
+			//////////////////////////
+			
+			if(!isGameStart){
+				scene.registerBeforeRender(function () {
+					camera.alpha += 0.003 * scene.getAnimationRatio();
+				});
+			}else{				
+				scene.registerBeforeRender(function () {
+					time += 1;
+					if(snakeSpeed > 5){
+						if((loser.body.length - 3)/2 == speedCount){
+							snakeSpeed -= 1;
+					//		console.log("length = " + loser.body.length);
+					//		console.log("snakeSpeed = " + snakeSpeed);
+							speedCount++;
+						}
+					}
+					if(time%snakeSpeed == 0){
+						isGameStart = loser.move(eggSet);
+						//遊戲結束
+						if(!isGameStart){
+							snakeSpeed = 10;
+							time = 0;
+							speedCount = 1;
+							camera.detachControl(canvas);							
+							$(".score").html(loser.body.length);
+							$(".endPage").css("display", "block");
+						}
+						isCanChangeWay = true;
+					}						
+					if(time%500 == 0)eggSet.layEgg();
+				});
+			}
+			
+			
+        	return scene;
+        }
+        
+        var scene = createScene();
+
+        engine.runRenderLoop(function () {
+            scene.render();
+        });
+		
+		function start() {
+			isGameStart = true;
+			$(".startPage").remove();	
+			scene = createScene();
+		}
+		function restart() {
+			isGameStart = true;			
+			$(".endPage").css("display", "none");	
+			scene = createScene();
+		}
+		function changeStartImg(x){
+			x.src = "image/start1.png";
+		}
+		function normalStartImg(x){
+			x.src = "image/start.png";
+		}
+		function changeRestartImg(x){
+			x.src = "image/restart1.png";
+		}
+		function normalReStartImg(x){
+			x.src = "image/restart.png";
+		}
+		
+        // Resize
+        window.addEventListener("resize", function () {
+            engine.resize();
+        });
+    </script>
+	
+	<div class = "startPage" >
+		<img class = "loading" src = "image/loading.png" >
+		<input id = "startButton" class = "startButton" type = "hidden" src="image/start.png" onclick="start();" onmouseover = "changeStartImg(this)" onmouseout= "normalStartImg(this)" />	
+	</div>
+	<input id = "addButton" class = "addButton" type = "image" src="image/add.png" />
+	<input id = "minusButton" class = "minusButton" type = "image" src="image/minus.png" />
+	<div class = "endPage" >
+		<div class = "score">18</div>
+		<input id = "restartButton" class = "restartButton" type = "image" src="image/restart.png" onclick = "restart();" onmouseover = "changeRestartImg(this)" onmouseout= "normalReStartImg(this)" />	
+	</div>
+	
+</body>
+</html>
