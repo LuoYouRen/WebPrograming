@@ -15,8 +15,12 @@
 		<script src="egg.js"></script>
         <style>
 			@font-face {
-				font-family: myFont;
-				src: url(fonts/Softplain.ttf);
+				font-family: myFont1;
+				src: url(fonts/Rise.otf);
+			}
+			@font-face {
+				font-family: myFont2;
+				src: url(fonts/SHOWG.ttf);
 			}
             html, body {
                 overflow: hidden;
@@ -31,6 +35,36 @@
                 height: 100%;
                 touch-action: none;
             }
+			.nowScore{
+				display: none;
+				font-family: myFont2, 微軟正黑體;
+				font-size: 100px;
+				color: white;				
+				text-align: center;
+				position: absolute;
+				width: 170px;
+				height: 130px;
+				left: 2%;
+				top: 5%;				
+			}
+			.timer{
+				display: none;
+				background: linear-gradient(#00FF00,#77FF00,#BBFF00,#FFFF00,#FFBB00,#FF8800,#FF5511,#FF0000);
+				border:5px white solid;
+				position: absolute;
+				width: 50px;
+                height: 500px;
+				left: 5%;
+				top: 25%;	
+			}
+			.timeBlock{
+				display: none;	
+				background-color: gray;							
+				position: absolute;
+				width: 50px;
+                height: 0px;
+			}
+			
 			
 			.startPage {
 				background-image: url('image/3DLoser.png');
@@ -56,43 +90,33 @@
 				top: 94%;
 				margin-left: -94.5px;
 				margin-top: -30.5px;				
-			}
-			.addButton{
-				position: absolute;
-				left: 90%;
-				top: 10%;
-			}
-			.minusButton{
-				position: absolute;
-				left: 90%;
-				top: 20%;
-			}
+			}			
 			.endPage {
 				display: none;
 				background-image: url('image/lose.png');
 				background-repeat:no-repeat;
-				width: 834px;
+				width: 724px;
 				height: 100%;
 				position: absolute;
 				left: 50%;
 				top: 15%;
-				margin-left: -417px;
-				margin-top: -102.5px;				
+				margin-left: -362px;
+				margin-top: -98.5px;				
 			}
 			.score{
 				background-image: url('image/board.png');
 				background-repeat:no-repeat;
-				font-family: myFont, 微軟正黑體;
+				font-family: myFont1, 微軟正黑體;
 				font-size: 240px;
 				color: black;	
-				align: center;				
+				align: center;	
+				letter-spacing: 30px;	
+				padding-left:20px;
 				text-align: center;
-				line-height: 350px;
-				letter-spacing: 30px;
+				line-height: 290px;
 				position: absolute;
-				width: 100%;
-				height: 300px;
 				width: 550px;
+				height: 300px;
 				left: 50%;
 				top: 30%;
 				margin-left: -275px;				
@@ -100,9 +124,19 @@
 			.restartButton {
 				position: absolute;
 				left: 50%;
-				top: 90%;
+				top: 80%;
 				margin-left: -142px;
 				margin-top: -35.5px;				
+			}
+			.addButton{
+				position: absolute;
+				left: 90%;
+				top: 8%;
+			}
+			.minusButton{
+				position: absolute;
+				left: 90%;
+				top: 20%;
 			}
         </style>
     </head>
@@ -114,11 +148,13 @@
 		var isGameStart = false;		
 		var musicPath = "sounds/BGM" + (Math.floor(Math.random() * 4) + 1) + ".wav";
 		var musicVolume = 0.5;
+		var timeBlock = 0;
 		var snakeSpeed = 10;
 		var loser;
 		var eggSet;
 		var time = 0;
 		var speedCount = 1;
+		var eatCount = 1;
 		var isCanChangeWay = true;
 
         var createScene = function () {
@@ -126,7 +162,8 @@
         
 			var light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(-30, 25, 5), scene);
         	var camera = new BABYLON.ArcRotateCamera("Camera",3 * Math.PI / 2, Math.PI / 2.5, 40, BABYLON.Vector3.Zero(), scene);	
-			
+			camera.lowerRadiusLimit = 35;
+			camera.upperRadiusLimit  = 100;
 			if(isGameStart){
 				camera.attachControl(canvas, true, false);			
 			}
@@ -134,7 +171,7 @@
 		//	console.log(musicPath);
         	var music = new BABYLON.Sound("MapleStory", musicPath, scene, function () {
 				if(!isGameStart){
-					console.log("Sound is now ready to be played.");
+				//	console.log("Sound is now ready to be played.");
 					// Play immediatly		
 					music.setVolume(musicVolume);					
 					music.play();
@@ -296,24 +333,32 @@
 			}else{				
 				scene.registerBeforeRender(function () {
 					time += 1;
+					
 					if(snakeSpeed > 5){
-						if((loser.body.length - 3)/2 == speedCount){
+						if((loser.body.length - 3)/3 == speedCount){
 							snakeSpeed -= 1;
 					//		console.log("length = " + loser.body.length);
 					//		console.log("snakeSpeed = " + snakeSpeed);
 							speedCount++;
 						}
 					}
+					if(time%5 == 0 && isGameStart && loser.energy < 500){
+						$(".timeBlock").css("height", loser.energy);					
+					}
 					if(time%snakeSpeed == 0){
 						isGameStart = loser.move(eggSet);
+						if(loser.energy == 500)isGameStart = false;
+						$(".nowScore").html(loser.body.length - 3);
 						//遊戲結束
 						if(!isGameStart){
+							//console.log(isGameStart);
 							snakeSpeed = 10;
 							time = 0;
-							speedCount = 1;
+							speedCount = 1;							
 							camera.detachControl(canvas);							
-							$(".score").html(loser.body.length);
+							$(".score").html(loser.body.length - 3);
 							$(".endPage").css("display", "block");
+							$(".nowScore").css("display", "none");
 						}
 						isCanChangeWay = true;
 					}						
@@ -333,11 +378,18 @@
 		
 		function start() {
 			isGameStart = true;
+			$(".nowScore").css("display", "block");
+			$(".timer").css("display", "block");
+			$(".timeBlock").css("display", "block");
 			$(".startPage").remove();	
 			scene = createScene();
 		}
 		function restart() {
-			isGameStart = true;			
+			isGameStart = true;		
+			timeBlock = 0;			
+			$(".nowScore").css("display", "block");
+			$(".timer").css("display", "block");
+			$(".timeBlock").css("display", "block");
 			$(".endPage").css("display", "none");	
 			scene = createScene();
 		}
@@ -359,7 +411,10 @@
             engine.resize();
         });
     </script>
-	
+	<div class = "nowScore"></div>
+	<div class = "timer">
+		<div class = "timeBlock"></div>
+	</div>
 	<div class = "startPage" >
 		<img class = "loading" src = "image/loading.png" >
 		<input id = "startButton" class = "startButton" type = "hidden" src="image/start.png" onclick="start();" onmouseover = "changeStartImg(this)" onmouseout= "normalStartImg(this)" />	
@@ -367,7 +422,7 @@
 	<input id = "addButton" class = "addButton" type = "image" src="image/add.png" />
 	<input id = "minusButton" class = "minusButton" type = "image" src="image/minus.png" />
 	<div class = "endPage" >
-		<div class = "score">18</div>
+		<div class = "score"></div>
 		<input id = "restartButton" class = "restartButton" type = "image" src="image/restart.png" onclick = "restart();" onmouseover = "changeRestartImg(this)" onmouseout= "normalReStartImg(this)" />	
 	</div>
 	
