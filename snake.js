@@ -40,15 +40,7 @@ function Snake(scene){
 						}
 					}
 				}
-				//判斷有沒有碰到身體的其他部位
-				for(var i = 1;i < this.body.length ; i++){
-					if(this.body[0][0] == this.body[i][0] &&
-						this.body[0][1] == this.body[i][1] &&
-						this.body[0][2] == this.body[i][2]){
-							this.die();
-							return 0;
-						}
-				}
+				
 				//先把所有後面的位置都往前取代
 				for(var i = this.body.length-1;i>0;i--){
 					for(var j = 0;j<this.body[i].length;j++){
@@ -124,6 +116,15 @@ function Snake(scene){
 							this.eat.play();
 							this.energy -= 150;
 							if(loser.energy < 0)loser.energy = 0;
+						}
+				}
+				//下一步有沒有碰到身體的其他部位
+				for(var i = 1;i < this.body.length ; i++){
+					if(this.body[0][0] + this.dir[0] == this.body[i][0] &&
+						this.body[0][1] + this.dir[1] == this.body[i][1] &&
+						this.body[0][2] + this.dir[2] == this.body[i][2]){
+							this.die();
+							return 0;
 						}
 				}
 				//
