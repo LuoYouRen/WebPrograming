@@ -51,6 +51,8 @@ function Eggs(snake,scene){
 	this.scene = scene;
 	this.array = new Array();
 	this.array[0] = new Egg(snake,scene);
+	this.layEgg();
+	this.layEgg();
 }
 //重新設定蛋的位置
 Eggs.prototype.reborn = function(index){

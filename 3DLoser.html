@@ -342,26 +342,19 @@
 							speedCount++;
 						}
 					}
-					if(time%5 == 0 && isGameStart && timeBlock < 500){
-						timeBlock += 2;
-						$(".timeBlock").css("height", timeBlock);
-						if((loser.body.length - 3) == eatCount){							
-							timeBlock -= 100;
-							if(timeBlock < 0)timeBlock = 0;
-							eatCount++;
-						}					
+					if(time%5 == 0 && isGameStart && loser.energy < 500){
+						$(".timeBlock").css("height", loser.energy);					
 					}
 					if(time%snakeSpeed == 0){
 						isGameStart = loser.move(eggSet);
-						if(timeBlock == 500)isGameStart = false;
+						if(loser.energy == 500)isGameStart = false;
 						$(".nowScore").html(loser.body.length - 3);
 						//遊戲結束
 						if(!isGameStart){
-							console.log(isGameStart);
+							//console.log(isGameStart);
 							snakeSpeed = 10;
 							time = 0;
 							speedCount = 1;							
-							eatCount = 1;
 							camera.detachControl(canvas);							
 							$(".score").html(loser.body.length - 3);
 							$(".endPage").css("display", "block");

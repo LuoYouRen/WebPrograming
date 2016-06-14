@@ -1,5 +1,6 @@
 const edge = 8;
 function Snake(scene){
+			  this.energy = 0;
 			  this.scene = scene;
 			  this.dir = [0,1,0];
 			  this.cube = new Array();
@@ -12,6 +13,8 @@ function Snake(scene){
 			}
 			
 			Snake.prototype.move = function(eggs){
+				this.energy +=5;
+				if(this.energy >= 500){this.die(); return 0;}
 				//判斷尾巴有沒有蛋蛋，有就吃掉
 				for(var i = 0;i<eggs.array.length;i++){
 					if(this.body[this.body.length-1][0] == eggs.array[i].position[0] &&
@@ -43,13 +46,7 @@ function Snake(scene){
 					if(this.body[0][0] == this.body[i][0] &&
 						this.body[0][1] == this.body[i][1] &&
 						this.body[0][2] == this.body[i][2]){
-							for(var i = 0;i < this.cube.length ; i++){
-								var materialSnake = new BABYLON.StandardMaterial("snake", this.scene);
-								materialSnake.diffuseColor = new BABYLON.Color3(0.0, 0.0, 0.0);//Green
-								materialSnake.specularColor = new BABYLON.Color3(1, 1, 1);//Green
-								//this.cube[i].material = materialSnake;
-								this.cube[i].scaling=new BABYLON.Vector3(0.8, 0.8, 0.8);
-							}
+							this.die();
 							return 0;
 						}
 				}
@@ -126,6 +123,8 @@ function Snake(scene){
 						this.body[0][1] + this.dir[1] == eggs.array[i].position[1] &&
 						this.body[0][2] + this.dir[2] == eggs.array[i].position[2]){
 							this.eat.play();
+							this.energy -= 100;
+							if(loser.energy < 0)loser.energy = 0;
 						}
 				}
 				//
@@ -249,5 +248,11 @@ function Snake(scene){
 				var materialSnakeHead = new BABYLON.StandardMaterial("snake", this.scene);
 				materialSnakeHead.diffuseColor = new BABYLON.Color3(0.0, 0.8, 0.1);//Green
 				this.cube[0].material = materialSnakeHead;
+			}
+			Snake.prototype.die = function(){
+				for(var i = 0;i < this.cube.length ; i++){
+					this.cube[i].scaling=new BABYLON.Vector3(0.7, 0.7, 0.7);
+					this.dir = [0,0,0];
+				}
 			}
 			
