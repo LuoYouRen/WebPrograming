@@ -14,7 +14,8 @@ function Snake(scene){
 			
 			Snake.prototype.move = function(eggs){
 				this.energy +=5;
-				if(this.energy >= 500){this.die(); return 0;}
+				if(this.energy<=500)$(".timeBlock").css("height", this.energy);	
+				if(this.energy == 500){this.die(); return 0;}
 				//判斷尾巴有沒有蛋蛋，有就吃掉
 				for(var i = 0;i<eggs.array.length;i++){
 					if(this.body[this.body.length-1][0] == eggs.array[i].position[0] &&
@@ -123,7 +124,7 @@ function Snake(scene){
 						this.body[0][1] + this.dir[1] == eggs.array[i].position[1] &&
 						this.body[0][2] + this.dir[2] == eggs.array[i].position[2]){
 							this.eat.play();
-							this.energy -= 100;
+							this.energy -= 150;
 							if(loser.energy < 0)loser.energy = 0;
 						}
 				}

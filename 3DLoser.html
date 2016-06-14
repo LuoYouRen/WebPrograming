@@ -342,9 +342,7 @@
 							speedCount++;
 						}
 					}
-					if(time%5 == 0 && isGameStart && loser.energy < 500){
-						$(".timeBlock").css("height", loser.energy);					
-					}
+
 					if(time%snakeSpeed == 0){
 						isGameStart = loser.move(eggSet);
 						if(loser.energy == 500)isGameStart = false;
