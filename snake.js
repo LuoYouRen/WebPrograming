@@ -47,7 +47,7 @@ function Snake(scene){
 								var materialSnake = new BABYLON.StandardMaterial("snake", this.scene);
 								materialSnake.diffuseColor = new BABYLON.Color3(0.0, 0.0, 0.0);//Green
 								materialSnake.specularColor = new BABYLON.Color3(1, 1, 1);//Green
-								//this.cube[i].material = materialSnake;
+								this.cube[i].material = materialSnake;
 								this.cube[i].scaling=new BABYLON.Vector3(0.8, 0.8, 0.8);
 							}
 							return 0;
