@@ -123,7 +123,6 @@ function Snake(scene){
 						this.body[0][2] + this.dir[2] == eggs.array[i].position[2]){
 							this.eat.play();
 							this.energy -= 150;
-							$(".timeBlock").css("height", this.energy); //能量條上升
 							if(loser.energy < 0)loser.energy = 0;
 						}
 				}
