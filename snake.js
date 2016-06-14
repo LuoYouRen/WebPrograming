@@ -107,8 +107,16 @@ function Snake(scene){
 				else if(this.body[0][0]==edge && this.body[0][1]==-1*edge){
 					if(this.dir[0] == 1){this.dir = [0,1,0];}
 					else if(this.dir[1] == -1){this.dir = [-1,0,0];}
+				}	
+				//下一步有沒有碰到身體的其他部位
+				for(var i = 1;i < this.body.length ; i++){
+					if(this.body[0][0] + this.dir[0] == this.body[i][0] &&
+						this.body[0][1] + this.dir[1] == this.body[i][1] &&
+						this.body[0][2] + this.dir[2] == this.body[i][2]){
+							this.die();
+							return 0;
+						}
 				}
-				
 				for(var i = 0;i<eggs.array.length;i++){
 					//蛇吃蛋音效
 					if(this.body[0][0] + this.dir[0] == eggs.array[i].position[0] &&
@@ -117,15 +125,6 @@ function Snake(scene){
 							this.eat.play();
 							this.energy -= 150;
 							if(loser.energy < 0)loser.energy = 0;
-						}
-				}
-				//下一步有沒有碰到身體的其他部位
-				for(var i = 1;i < this.body.length ; i++){
-					if(this.body[0][0] + this.dir[0] == this.body[i][0] &&
-						this.body[0][1] + this.dir[1] == this.body[i][1] &&
-						this.body[0][2] + this.dir[2] == this.body[i][2]){
-							this.die();
-							return 0;
 						}
 				}
 				//
