@@ -12,9 +12,9 @@ function Snake(scene){
 			  this.eat = new BABYLON.Sound("Violons", "sounds/eat.wav", scene, null, { loop: false, autoplay: false });
 			}
 			
-			Snake.prototype.move = function(eggs){
-				this.energy +=5;
-				if(this.energy >= 500){this.die(); return 0;}
+			Snake.prototype.move = function(eggs){					
+				if(this.energy == 500){this.die(); return 0;} 
+				if(this.energy<=500 )$(".timeBlock").css("height", this.energy); //能量條下降
 				//判斷尾巴有沒有蛋蛋，有就吃掉
 				for(var i = 0;i<eggs.array.length;i++){
 					if(this.body[this.body.length-1][0] == eggs.array[i].position[0] &&
@@ -123,7 +123,7 @@ function Snake(scene){
 						this.body[0][1] + this.dir[1] == eggs.array[i].position[1] &&
 						this.body[0][2] + this.dir[2] == eggs.array[i].position[2]){
 							this.eat.play();
-							this.energy -= 100;
+							this.energy -= 150;
 							if(loser.energy < 0)loser.energy = 0;
 						}
 				}
@@ -131,7 +131,7 @@ function Snake(scene){
 				this.body[0][0]+=this.dir[0];
 				this.body[0][1]+=this.dir[1];
 				this.body[0][2]+=this.dir[2];
-				
+				this.energy +=5; //能量消耗
 				//set cubes
 				for(var i =0;i<this.body.length;i++){
 					this.cube[i].position = new BABYLON.Vector3(this.body[i][0], this.body[i][1], this.body[i][2]);
