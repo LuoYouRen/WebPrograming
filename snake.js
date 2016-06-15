@@ -256,11 +256,8 @@ function Snake(scene){
 			Snake.prototype.die = function(){
 					this.dead.play();
 					this.particleSystem = new Array();
-					var materialSnake = new BABYLON.StandardMaterial("snake", this.scene);
-					materialSnake.diffuseColor = new BABYLON.Color3(0.0, 0.3, 0.0);//Green
 				for(var i = 0;i < this.cube.length ; i++){
-					this.cube[i].material = materialSnake;
-					this.cube[i].scaling=new BABYLON.Vector3(0.81, 0.81, 0.81);
+					this.cube[i].scaling=new BABYLON.Vector3(0.7, 0.7, 0.7);
 					this.dir = [0,0,0];
 					//寫粒子
 					 this.particleSystem[i] = new BABYLON.ParticleSystem("particles", 100, scene);
@@ -271,7 +268,7 @@ function Snake(scene){
 					// 粒子的來源
 					this.particleSystem[i].emitter = this.cube[i]; // 從這塊方塊發射
 					this.particleSystem[i].minEmitBox = new BABYLON.Vector3(-1, 0, 0); //最小发射
-					this.particleSystem[i].maxEmitBox = new BABYLON.Vector3(-1, 0, 0); //最大发射(基于轴的延伸，建议改这里的数值体验)
+					this.particleSystem[i].maxEmitBox = new BABYLON.Vector3(1, 0, 0); //最大发射(基于轴的延伸，建议改这里的数值体验)
 
 					// 粒子颜色
 					this.particleSystem[i].color1 = new BABYLON.Color4(0.1, 0.8, 0.4, 1.0);
