@@ -53,8 +53,8 @@
 				border:5px white solid;
 				position: absolute;
 				width: 50px;
-                height: 500px;
-				left: 5%;
+                height: 60%;
+				left: 6%;
 				top: 25%;	
 			}
 			.timeBlock{
@@ -62,7 +62,7 @@
 				background-color: gray;							
 				position: absolute;
 				width: 50px;
-                height: 0px;
+                height: 0%;
 			}
 			
 			
@@ -138,6 +138,11 @@
 				left: 90%;
 				top: 20%;
 			}
+			.howToPlayButton{
+				position: absolute;
+				left: 90%;
+				top: 83%;
+			}
         </style>
     </head>
 <body>
@@ -194,7 +199,7 @@
 					document.getElementById("startButton").type = "image";
 				}						
 			});			
-			music.loop = true;
+			music.loop = true;			
 			window.addEventListener("keydown", function (evt) {
 				// Press + key to Increase the Volume
 				if (evt.keyCode === 107) { 
@@ -348,15 +353,12 @@
 						if(loser.energy == 500)isGameStart = false;
 						$(".nowScore").html(loser.body.length - 3);
 						//遊戲結束
-						if(!isGameStart){
-							//console.log(isGameStart);
-							snakeSpeed = 10;
+						if(!isGameStart){								
+							snakeSpeed = 10;							
 							time = 0;
 							speedCount = 1;							
-							camera.detachControl(canvas);							
-							$(".score").html(loser.body.length - 3);
-							$(".endPage").css("display", "block");
-							$(".nowScore").css("display", "none");
+							camera.detachControl(canvas);			
+							setTimeout("showEnd()",3000);							
 						}
 						isCanChangeWay = true;
 					}						
@@ -382,7 +384,7 @@
 			$(".startPage").remove();	
 			scene = createScene();
 		}
-		function restart() {
+		function restart() {			
 			isGameStart = true;		
 			timeBlock = 0;			
 			$(".nowScore").css("display", "block");
@@ -390,6 +392,12 @@
 			$(".timeBlock").css("display", "block");
 			$(".endPage").css("display", "none");	
 			scene = createScene();
+		}
+		function showEnd(){
+			if(!isGameStart){
+			$(".score").html(loser.body.length - 3);
+			$(".endPage").css("display", "block");
+			$(".nowScore").css("display", "none");}
 		}
 		function changeStartImg(x){
 			x.src = "image/start1.png";
@@ -419,6 +427,7 @@
 	</div>
 	<input id = "addButton" class = "addButton" type = "image" src="image/add.png" />
 	<input id = "minusButton" class = "minusButton" type = "image" src="image/minus.png" />
+	<input id = "howToPlayButton" class = "howToPlayButton" type = "image" src="image/question.png" />
 	<div class = "endPage" >
 		<div class = "score"></div>
 		<input id = "restartButton" class = "restartButton" type = "image" src="image/restart.png" onclick = "restart();" onmouseover = "changeRestartImg(this)" onmouseout= "normalReStartImg(this)" />	
