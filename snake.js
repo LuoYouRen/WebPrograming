@@ -11,6 +11,7 @@ function Snake(scene){
 			  this.body[2] = [0,-2,-8];
 			  this.draw();
 			  this.eat = new BABYLON.Sound("Violons", "sounds/eat.wav", scene, null, { loop: false, autoplay: false });
+			  this.dead = new BABYLON.Sound("Violons", "sounds/dead.wav", scene, null, { loop: false, autoplay: false });
 			}
 			
 			Snake.prototype.move = function(eggs){
@@ -253,15 +254,16 @@ function Snake(scene){
 				this.cube[0].material = materialSnakeHead;
 			}
 			Snake.prototype.die = function(){
+					this.dead.play();
 					this.particleSystem = new Array();
 				for(var i = 0;i < this.cube.length ; i++){
 					this.cube[i].scaling=new BABYLON.Vector3(0.7, 0.7, 0.7);
 					this.dir = [0,0,0];
 					//寫粒子
-					 this.particleSystem[i] = new BABYLON.ParticleSystem("image/green.png", 2000, scene);
+					 this.particleSystem[i] = new BABYLON.ParticleSystem("particles", 100, scene);
 
 					//粒子的纹理
-					//particleSystem.particleTexture = new BABYLON.Texture("", scene);
+					this.particleSystem[i].particleTexture = new BABYLON.Texture("image/green.png", scene);
 
 					// 粒子的來源
 					this.particleSystem[i].emitter = this.cube[i]; // 從這塊方塊發射
@@ -279,10 +281,10 @@ function Snake(scene){
 
 					// 粒子寿命
 					this.particleSystem[i].minLifeTime = 0.3;
-					this.particleSystem[i].maxLifeTime = 1.5;
+					this.particleSystem[i].maxLifeTime = 1.0;
 
 					// 发射率
-					this.particleSystem[i].emitRate = 1500;
+					this.particleSystem[i].emitRate = 1000;
 
 					// 混合模式 : BLENDMODE_ONEONE(基于某地的混合模式), or BLENDMODE_STANDARD(标准的混合模式)
 					this.particleSystem[i].blendMode = BABYLON.ParticleSystem.BLENDMODE_ONEONE;
@@ -291,8 +293,8 @@ function Snake(scene){
 					this.particleSystem[i].gravity = new BABYLON.Vector3(0, -9.81, 0);
 
 					// 粒子喷射方向
-					this.particleSystem[i].direction1 = new BABYLON.Vector3(this.body[i][0], this.body[i][1], this.body[i][2]);
-					this.particleSystem[i].direction2 = new BABYLON.Vector3(this.body[i][0], this.body[i][1], this.body[i][2]);
+					this.particleSystem[i].direction1 = new BABYLON.Vector3(Math.random()*10, Math.random()*10,Math.random()*10);
+					this.particleSystem[i].direction2 = new BABYLON.Vector3(Math.random()*10, Math.random()*10,Math.random()*10);
 
 					// 角速度，弧度
 					this.particleSystem[i].minAngularSpeed = 0;
@@ -304,9 +306,8 @@ function Snake(scene){
 					this.particleSystem[i].updateSpeed = 0.005;
 					console.log(this.particleSystem[i]);
 					// 开始粒子系统
-					this.particleSystem[i].start();
-					
+					this.particleSystem[i].start();					
 				}
-				this.isDead = true;
+				this.isDead = true;				
 			}
 			
