@@ -150,11 +150,12 @@
     <script>
         var canvas = document.getElementById("renderCanvas");
         var engine = new BABYLON.Engine(canvas, true);
+		var now = new Date();
 		var isGameStart = false;		
 		var musicPath = "sounds/BGM" + (Math.floor(Math.random() * 4) + 1) + ".wav";
 		var musicVolume = 0.5;
 		var timeBlock = 0;
-		var snakeSpeed = 10;
+		var snakeSpeed = 15;
 		var loser;
 		var eggSet;
 		var time = 0;
@@ -166,6 +167,7 @@
         	var scene = new BABYLON.Scene(engine);
         
 			var light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(-30, 25, 5), scene);
+			light.specular = new BABYLON.Color3(0, 0, 0);
         	var camera = new BABYLON.ArcRotateCamera("Camera",3 * Math.PI / 2, Math.PI / 2.5, 40, BABYLON.Vector3.Zero(), scene);	
 			camera.lowerRadiusLimit = 35;
 			camera.upperRadiusLimit  = 100;
@@ -339,11 +341,13 @@
 				scene.registerBeforeRender(function () {
 					time += 1;
 					
-					if(snakeSpeed > 5){
-						if((loser.body.length - 3)/3 == speedCount){
+					console.log("time = " + time);
+					
+					if(snakeSpeed > 8){
+						if((loser.body.length - 3)/5 == speedCount){
 							snakeSpeed -= 1;
-					//		console.log("length = " + loser.body.length);
-					//		console.log("snakeSpeed = " + snakeSpeed);
+							console.log("length = " + loser.body.length);
+							console.log("snakeSpeed = " + snakeSpeed);
 							speedCount++;
 						}
 					}
@@ -354,7 +358,7 @@
 						$(".nowScore").html(loser.body.length - 3);
 						//遊戲結束
 						if(!isGameStart){								
-							snakeSpeed = 10;							
+							snakeSpeed = 15;							
 							time = 0;
 							speedCount = 1;							
 							camera.detachControl(canvas);			
