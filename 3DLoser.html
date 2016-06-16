@@ -185,7 +185,6 @@
         	var scene = new BABYLON.Scene(engine);
         
 			var light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(-30, 25, 5), scene);
-			light.specular = new BABYLON.Color3(0, 0, 0);
         	var camera = new BABYLON.ArcRotateCamera("Camera",3 * Math.PI / 2, Math.PI / 2.5, 40, BABYLON.Vector3.Zero(), scene);	
 			camera.lowerRadiusLimit = 35;
 			camera.upperRadiusLimit  = 100;
@@ -304,21 +303,27 @@
 			var f = new BABYLON.StandardMaterial("material0",scene);
 			f.diffuseTexture = new BABYLON.Texture("textures/grassDown.png",scene);
 			f.emissiveTexture = new BABYLON.Texture("textures/grassDown.png",scene);
+			f.specularColor = new BABYLON.Color3(0.00, 0.00, 0.00);
 			var ba = new BABYLON.StandardMaterial("material1",scene);
 			ba.diffuseTexture = new BABYLON.Texture("textures/grassUp.png",scene);
 			ba.emissiveTexture = new BABYLON.Texture("textures/grassUp.png",scene);
+			ba.specularColor = new BABYLON.Color3(0.00, 0.00, 0.00);
 			var l = new BABYLON.StandardMaterial("material2",scene);
 			l.diffuseTexture = new BABYLON.Texture("textures/grassRight.png",scene);
 			l.emissiveTexture = new BABYLON.Texture("textures/grassRight.png",scene);
+			l.specularColor = new BABYLON.Color3(0.00, 0.00, 0.00);
 			var r = new BABYLON.StandardMaterial("material3",scene);
 			r.diffuseTexture = new BABYLON.Texture("textures/grassRight.png",scene);
 			r.emissiveTexture = new BABYLON.Texture("textures/grassRight.png",scene);
+			r.specularColor = new BABYLON.Color3(0.00, 0.00, 0.00);
 			var t = new BABYLON.StandardMaterial("material4",scene);
 			t.diffuseTexture = new BABYLON.Texture("textures/grassRight.png",scene);
 			t.emissiveTexture = new BABYLON.Texture("textures/grassRight.png",scene);
+			t.specularColor = new BABYLON.Color3(0.00, 0.00, 0.00);
 			var bo = new BABYLON.StandardMaterial("material5",scene);
 			bo.diffuseTexture = new BABYLON.Texture("textures/grassLeft.png",scene);
 			bo.emissiveTexture = new BABYLON.Texture("textures/grassLeft.png",scene);
+			bo.specularColor = new BABYLON.Color3(0.00, 0.00, 0.00);
 			//put into one
 			var multi=new BABYLON.MultiMaterial("nuggetman",scene);
 			multi.subMaterials.push(f);
