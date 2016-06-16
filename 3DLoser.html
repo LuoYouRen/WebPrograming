@@ -6,12 +6,6 @@
         <title>3D魯蛇</title>
 		
         
-		<!-- fb -->
-		<meta property="og:url"           content="http://luoyouren.github.io/WebProgramming/3DLoser.html" />
-		<meta property="og:type"          content="website" />
-		<meta property="og:title"         content="3D魯蛇" />
-		<meta property="og:description"   content="大家一起來玩3D貪食蛇!!" />
-		<meta property="og:image"         content="http://luoyouren.github.io/WebProgramming/image/3DLoser.png" />
 		
 		<!-- Babylon.js -->
         <script src="http://www.babylonjs.com/hand.minified-1.2.js"></script>
@@ -365,7 +359,7 @@
 				scene.registerBeforeRender(function () {
 					time += 1;
 					
-					console.log("time = " + time);
+					//console.log("time = " + time);
 					
 					if(snakeSpeed > 8){
 						if((loser.body.length - 3)/5 == speedCount){
