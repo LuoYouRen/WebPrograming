@@ -24,6 +24,7 @@
         <script src="http://www.babylonjs.com/oimo.js"></script>
         <script src="http://www.babylonjs.com/babylon.js"></script>
 		<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+	    <script src="layer-v2.3/layer/layer.js"></script>
 		<script src="snake.js"></script>
 		<script src="egg.js"></script>
 		 
@@ -183,6 +184,8 @@
 		var speedCount = 1;
 		var eatCount = 1;
 		var isCanChangeWay = true;
+		var howPhoto = '{"title": "","id": "howToPlay","start": 0,"data": [{"alt": "","pid": "how1","src": "image/001.jpg","thumb": "image/001.jpg"}, {"alt": "","pid": "how2","src": "image/002.jpg","thumb": "image/002.jpg"}, {"alt": "","pid": "how3","src": "image/003.jpg","thumb": "image/003.jpg"}]}';
+		var photoJson = JSON.parse(howPhoto);
 
         var createScene = function () {
         	var scene = new BABYLON.Scene(engine);
@@ -441,7 +444,18 @@
 		function normalReStartImg(x){
 			x.src = "image/restart.png";
 		}
-		
+		$(document).ready(function() {
+			$("#howToPlayButton").click(function(){
+				layer.ready(function(){
+					layer.photos({
+						photos: photoJson,
+						area: ['65%'],
+						shift: 0,
+						move: false
+					});
+				});
+			});
+        });
         // Resize
         window.addEventListener("resize", function () {
             engine.resize();
