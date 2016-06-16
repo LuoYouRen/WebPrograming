@@ -5,7 +5,15 @@
 
         <title>3D魯蛇</title>
 		
-        <!-- Babylon.js -->
+        
+		<!-- fb -->
+		<meta property="og:url"           content="http://luoyouren.github.io/WebProgramming/3DLoser.html" />
+		<meta property="og:type"          content="website" />
+		<meta property="og:title"         content="3D魯蛇" />
+		<meta property="og:description"   content="大家一起來玩3D貪食蛇!!" />
+		<meta property="og:image"         content="http://luoyouren.github.io/WebProgramming/image/3DLoser.png" />
+		
+		<!-- Babylon.js -->
         <script src="http://www.babylonjs.com/hand.minified-1.2.js"></script>
         <script src="http://www.babylonjs.com/cannon.js"></script>
         <script src="http://www.babylonjs.com/oimo.js"></script>
@@ -13,6 +21,7 @@
 		<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
 		<script src="snake.js"></script>
 		<script src="egg.js"></script>
+		 
         <style>
 			@font-face {
 				font-family: myFont1;
@@ -128,6 +137,7 @@
 				margin-left: -142px;
 				margin-top: -35.5px;				
 			}
+			
 			.addButton{
 				position: absolute;
 				left: 90%;
@@ -138,6 +148,12 @@
 				left: 90%;
 				top: 20%;
 			}
+			.fb-share-button{
+				position: absolute;
+				left: 90%;
+				top: 73%;
+				
+			}
 			.howToPlayButton{
 				position: absolute;
 				left: 90%;
@@ -146,6 +162,14 @@
         </style>
     </head>
 <body>
+	<div id="fb-root"></div>
+		<script>(function(d, s, id) {
+		  var js, fjs = d.getElementsByTagName(s)[0];
+		  if (d.getElementById(id)) return;
+		  js = d.createElement(s); js.id = id;
+		  js.src = "//connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v2.6";
+		  fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));</script>
     <canvas id="renderCanvas"></canvas>
     <script>
         var canvas = document.getElementById("renderCanvas");
@@ -432,9 +456,12 @@
 	<input id = "addButton" class = "addButton" type = "image" src="image/add.png" />
 	<input id = "minusButton" class = "minusButton" type = "image" src="image/minus.png" />
 	<input id = "howToPlayButton" class = "howToPlayButton" type = "image" src="image/question.png" />
+	<div class="fb-share-button" data-href="http://luoyouren.github.io/WebProgramming/3DLoser.html" data-layout="icon" data-mobile-iframe="false"><a class="fb-xfbml-parse-ignore" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fluoyouren.github.io%2FWebProgramming%2F3DLoser.html&amp;src=sdkpreparse">
+		<img src="image/facebook.png"></a></div>
 	<div class = "endPage" >
 		<div class = "score"></div>
 		<input id = "restartButton" class = "restartButton" type = "image" src="image/restart.png" onclick = "restart();" onmouseover = "changeRestartImg(this)" onmouseout= "normalReStartImg(this)" />	
+		
 	</div>
 	
 </body>
