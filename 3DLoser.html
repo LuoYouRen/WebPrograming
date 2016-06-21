@@ -24,6 +24,7 @@
         <script src="http://www.babylonjs.com/oimo.js"></script>
         <script src="http://www.babylonjs.com/babylon.js"></script>
 		<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+	    <script src="layer-v2.3/layer/layer.js"></script>
 		<script src="snake.js"></script>
 		<script src="egg.js"></script>
 		 
@@ -153,15 +154,21 @@
 				left: 90%;
 				top: 20%;
 			}
-			.fb-share-button{
+			.pptButton{
 				position: absolute;
-				left: 90.3%;
-				top: 92%;				
-			}
+				left: 90%;
+				top: 71%;
+			}		
 			.howToPlayButton{
 				position: absolute;
 				left: 90%;
 				top: 83%;
+			}
+			
+			.fb-share-button{
+				position: absolute;
+				left: 90.3%;
+				top: 95%;				
 			}
         </style>
     </head>
@@ -183,6 +190,8 @@
 		var speedCount = 1;
 		var eatCount = 1;
 		var isCanChangeWay = true;
+		var howPhoto = '{"title": "","id": "howToPlay","start": 0,"data": [{"alt": "","pid": "how1","src": "image/001.jpg","thumb": "image/001.jpg"}, {"alt": "","pid": "how2","src": "image/002.jpg","thumb": "image/002.jpg"}, {"alt": "","pid": "how3","src": "image/003.jpg","thumb": "image/003.jpg"}]}';
+		var photoJson = JSON.parse(howPhoto);
 
         var createScene = function () {
         	var scene = new BABYLON.Scene(engine);
@@ -388,7 +397,7 @@
 							time = 0;
 							speedCount = 1;							
 							camera.detachControl(canvas);			
-							setTimeout("showEnd()",3000);							
+							setTimeout("showEnd()",2000);							
 						}
 						isCanChangeWay = true;
 					}						
@@ -441,7 +450,18 @@
 		function normalReStartImg(x){
 			x.src = "image/restart.png";
 		}
-		
+		$(document).ready(function() {
+			$("#howToPlayButton").click(function(){
+				layer.ready(function(){
+					layer.photos({
+						photos: photoJson,
+						area: ['65%'],
+						shift: 0,
+						move: false
+					});
+				});
+			});
+        });
         // Resize
         window.addEventListener("resize", function () {
             engine.resize();
@@ -457,6 +477,7 @@
 	</div>
 	<input id = "addButton" class = "addButton" type = "image" src="image/add.png" />
 	<input id = "minusButton" class = "minusButton" type = "image" src="image/minus.png" />
+	<a href = "00257104+00257124.pptx" id = "pptButton" class = "pptButton" ><img src="image/ppt.png"></a>
 	<input id = "howToPlayButton" class = "howToPlayButton" type = "image" src="image/question.png" />
 		<div class="fb-share-button" data-href="http://luoyouren.github.io/WebProgramming/3DLoser.html" data-layout="button" data-mobile-iframe="true"><a class="fb-xfbml-parse-ignore" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fluoyouren.github.io%2FWebProgramming%2F3DLoser.html&amp;src=sdkpreparse">分享</a></div>
 	<div class = "endPage" >
